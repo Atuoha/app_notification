@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../components/customElevatedButton.dart';
+import '../components/custom_rich_text.dart';
 import '../constants/colors.dart';
 
 class HomePage extends StatefulWidget {
@@ -13,6 +14,20 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  String selectedNotificationDay = '';
+  TimeOfDay selectedTime = TimeOfDay.now();
+  bool isTimeSelected = false;
+
+  final List<String> notificationDays = [
+    'Mon',
+    'Tue',
+    'Wed',
+    'Thur',
+    'Fri',
+    'Sat',
+    'Sun'
+  ];
+
   void triggerNetworkNotification() {
     // Todo
   }
@@ -22,7 +37,52 @@ class _HomePageState extends State<HomePage> {
   }
 
   void triggerEcoNotification() {
-    // Todo
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Show Notification Every'),
+        content: Wrap(
+          spacing: 3.0,
+          runSpacing: 8.0,
+          children: notificationDays
+              .map(
+                (day) => ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColor.secondaryColor),
+                  onPressed: () {
+                    setState(() {
+                      selectedNotificationDay = day;
+                    });
+                    pickTime();
+                  },
+                  child: Text(
+                    day,
+                    style: const TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              )
+              .toList(),
+        ),
+      ),
+    );
+  }
+
+  // time picker
+  void pickTime() {
+    showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    ).then(
+      (time) {
+        setState(() {
+          selectedTime = time!;
+          isTimeSelected = true;
+        });
+        Navigator.of(context).pop();
+      },
+    );
   }
 
   @override
@@ -62,6 +122,18 @@ class _HomePageState extends State<HomePage> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          if (isTimeSelected) ...[
+            CustomRichText(
+              title: 'Selected Day: ',
+              content: selectedNotificationDay,
+            ),
+            const SizedBox(height: 10),
+            CustomRichText(
+              title: 'Selected Time: ',
+              content: selectedTime.format(context),
+            ),
+            const SizedBox(height: 10),
+          ],
           Image.asset('assets/imgs/rocket.png'),
           const SizedBox(height: 10),
           Row(
