@@ -1,10 +1,13 @@
 import 'package:app_notifications/pages/stats_page.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
 import '../components/customElevatedButton.dart';
 import '../components/custom_rich_text.dart';
+import '../components/k_cool_alert.dart';
 import '../constants/colors.dart';
 
 class HomePage extends StatefulWidget {
@@ -58,7 +61,7 @@ class _HomePageState extends State<HomePage> {
                     int index = day.key;
                     setState(() {
                       selectedNotificationDay = day.value;
-                      selectedDayOfTheWeek = index+1;
+                      selectedDayOfTheWeek = index + 1;
                     });
                     pickTime();
                   },
@@ -91,6 +94,18 @@ class _HomePageState extends State<HomePage> {
       },
     );
     return null;
+  }
+
+  @override
+  void initState() {
+    AwesomeNotifications().isNotificationAllowed().then((_) {
+      return kCoolAlert(
+        context: context,
+        alert: CoolAlertType.error,
+        message: 'Access to notification was denied!',
+      );
+    });
+    super.initState();
   }
 
   @override
