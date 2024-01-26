@@ -1,6 +1,8 @@
+import 'package:app_notifications/pages/stats_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../components/customElevatedButton.dart';
 import '../constants/colors.dart';
 
 class HomePage extends StatefulWidget {
@@ -45,9 +47,13 @@ class _HomePageState extends State<HomePage> {
         ),
         actions: [
           IconButton(
-            onPressed: () => null,
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => const StatsPage(),
+              ),
+            ),
             icon: const Icon(
-              CupertinoIcons.cloud_hail,
+              CupertinoIcons.chart_bar_square,
               color: Colors.white,
             ),
           )
@@ -61,53 +67,20 @@ class _HomePageState extends State<HomePage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColor.secondaryColor,
-                ),
-                onPressed: () => triggerNetworkNotification(),
-                icon: const Icon(
-                  CupertinoIcons.news,
-                  color: Colors.white,
-                ),
-                label: const Text(
-                  'Network',
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
+              CustomElevatedButton(
+                function: triggerNetworkNotification,
+                title: 'Network',
+                icon: CupertinoIcons.news,
               ),
-              ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColor.secondaryColor,
-                ),
-                onPressed: () => triggerEcoNotification(),
-                icon: const Icon(
-                  CupertinoIcons.tickets,
-                  color: Colors.white,
-                ),
-                label: const Text(
-                  'Eco Tickets',
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
+              CustomElevatedButton(
+                function: triggerEcoNotification,
+                title: 'Eco Tickets',
+                icon: CupertinoIcons.tickets,
               ),
-              ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColor.secondaryColor,
-                ),
-                onPressed: () => triggerCancelNotification(),
-                icon: const Icon(
-                  CupertinoIcons.xmark_octagon,
-                  color: Colors.white,
-                ),
-                label: const Text(
-                  'Cancel',
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
+              CustomElevatedButton(
+                function: triggerCancelNotification,
+                title: 'Cancel',
+                icon: CupertinoIcons.xmark_octagon,
               ),
             ],
           )
