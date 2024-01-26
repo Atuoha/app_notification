@@ -1,6 +1,7 @@
 import 'package:app_notifications/pages/stats_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 import '../components/customElevatedButton.dart';
 import '../components/custom_rich_text.dart';
@@ -15,8 +16,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String selectedNotificationDay = '';
+  int selectedDayOfTheWeek = 0;
   TimeOfDay selectedTime = TimeOfDay.now();
   bool isTimeSelected = false;
+  final uid = const Uuid();
 
   final List<String> notificationDays = [
     'Mon',
@@ -45,18 +48,22 @@ class _HomePageState extends State<HomePage> {
           spacing: 3.0,
           runSpacing: 8.0,
           children: notificationDays
+              .asMap()
+              .entries
               .map(
                 (day) => ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       backgroundColor: AppColor.secondaryColor),
                   onPressed: () {
+                    int index = day.key;
                     setState(() {
-                      selectedNotificationDay = day;
+                      selectedNotificationDay = day.value;
+                      selectedDayOfTheWeek = index+1;
                     });
                     pickTime();
                   },
                   child: Text(
-                    day,
+                    day.value,
                     style: const TextStyle(
                       color: Colors.white,
                     ),
@@ -70,8 +77,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   // time picker
-  void pickTime() {
-    showTimePicker(
+  Future<TimeOfDay?> pickTime() async {
+    await showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
     ).then(
@@ -83,6 +90,7 @@ class _HomePageState extends State<HomePage> {
         Navigator.of(context).pop();
       },
     );
+    return null;
   }
 
   @override
