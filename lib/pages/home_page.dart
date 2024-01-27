@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
 import '../components/customElevatedButton.dart';
+import '../components/custom_alert_dialog.dart';
 import '../components/custom_rich_text.dart';
 import '../components/k_cool_alert.dart';
 import '../constants/colors.dart';
@@ -96,13 +97,23 @@ class _HomePageState extends State<HomePage> {
     return null;
   }
 
+  // requestPermissionToSendNotifications
+  void requestPermissionToSendNotifications() {
+    AwesomeNotifications().requestPermissionToSendNotifications().then((value) {
+      Navigator.of(context).pop();
+    });
+  }
+
   @override
   void initState() {
     AwesomeNotifications().isNotificationAllowed().then((_) {
-      return kCoolAlert(
+      return customAlertDialog(
+        title: 'Allow notifications',
+        content: 'Rocket App needs access to notifications',
         context: context,
-        alert: CoolAlertType.error,
-        message: 'Access to notification was denied!',
+        action: requestPermissionToSendNotifications,
+        button1Title: 'Allow',
+        button2Title: 'Don\'t Allow',
       );
     });
     super.initState();
