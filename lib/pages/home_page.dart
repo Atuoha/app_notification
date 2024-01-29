@@ -49,7 +49,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void triggerCancelNotification() {
-    // Todo
+    notificationUtil.cancelAllScheduledNotifications(context: context);
   }
 
   void triggerScheduleNotification() {
@@ -73,6 +73,7 @@ class _HomePageState extends State<HomePage> {
                       selectedNotificationDay = day.value;
                       selectedDayOfTheWeek = index + 1;
                     });
+                    Navigator.of(context).pop();
                     pickTime();
                   },
                   child: Text(
@@ -117,10 +118,13 @@ class _HomePageState extends State<HomePage> {
           selectedTime = time!;
           isTimeSelected = true;
         });
-        createScheduleNotification();
+        if (isTimeSelected) {
+          createScheduleNotification();
+        }
         Navigator.of(context).pop();
       },
     );
+
     return null;
   }
 

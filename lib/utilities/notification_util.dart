@@ -3,6 +3,7 @@ import 'package:app_notifications/utilities/create_uid.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import '../constants/app_strings.dart';
+import '../constants/colors.dart';
 import '../main.dart';
 import '../pages/stats_page.dart';
 
@@ -70,6 +71,18 @@ class NotificationUtil {
     );
   }
 
+  // cancel all scheduled notifications
+  void cancelAllScheduledNotifications({required BuildContext context}){
+    awesomeNotifications.cancelAllSchedules().then((value) => {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Cancelled all scheduled notifications'),
+          backgroundColor: AppColor.primaryColor,
+        ),
+      )
+    });
+  }
+
   // requestPermissionToSendNotifications
   void requestPermissionToSendNotifications({required BuildContext context}) {
     AwesomeNotifications().requestPermissionToSendNotifications().then((value) {
@@ -86,7 +99,9 @@ class NotificationUtil {
       SnackBar(
         content: Text(
           'Notification created ${receivedNotification.channelKey}',
+
         ),
+        backgroundColor: AppColor.primaryColor,
       ),
     );
   }
