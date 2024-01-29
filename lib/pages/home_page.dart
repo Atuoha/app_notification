@@ -1,14 +1,11 @@
 import 'package:app_notifications/pages/stats_page.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
-
 import '../components/customElevatedButton.dart';
 import '../components/custom_alert_dialog.dart';
 import '../components/custom_rich_text.dart';
-import '../components/k_cool_alert.dart';
 import '../constants/colors.dart';
 import '../utilities/notification_util.dart';
 
@@ -99,11 +96,9 @@ class _HomePageState extends State<HomePage> {
     return null;
   }
 
-  // requestPermissionToSendNotifications
-  void requestPermissionToSendNotifications() {
-    AwesomeNotifications().requestPermissionToSendNotifications().then((value) {
-      Navigator.of(context).pop();
-    });
+  // request permission
+  void requestPermission() {
+    notificationUtil.requestPermissionToSendNotifications(context: context);
   }
 
   @override
@@ -113,7 +108,7 @@ class _HomePageState extends State<HomePage> {
         title: 'Allow notifications',
         content: 'Rocket App needs access to notifications',
         context: context,
-        action: requestPermissionToSendNotifications,
+        action: requestPermission,
         button1Title: 'Allow',
         button2Title: 'Don\'t Allow',
       );
@@ -122,6 +117,19 @@ class _HomePageState extends State<HomePage> {
     notificationUtil = NotificationUtil(
       awesomeNotifications: AwesomeNotifications(),
     );
+
+    AwesomeNotifications().setListeners(
+      onNotificationCreatedMethod: (notification) async =>
+          NotificationUtil.onNotificationCreatedMethod(notification, context),
+      onActionReceivedMethod: (ReceivedAction receivedAction) =>
+          NotificationUtil.onActionReceivedMethod(receivedAction),
+      onDismissActionReceivedMethod: (ReceivedAction receivedAction) =>
+          NotificationUtil.onDismissActionReceivedMethod(receivedAction),
+      onNotificationDisplayedMethod: (ReceivedNotification
+              receivedNotification) =>
+          NotificationUtil.onNotificationDisplayedMethod(receivedNotification),
+    );
+
     super.initState();
   }
 
