@@ -6,7 +6,7 @@ import 'constants/colors.dart';
 
 void main() {
   AwesomeNotifications().initialize(
-    'resources://drawable/ic_res_notification_icon.png',
+    '',
     [
       NotificationChannel(
         channelKey: 'basic_channel',

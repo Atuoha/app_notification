@@ -10,6 +10,7 @@ import '../components/custom_alert_dialog.dart';
 import '../components/custom_rich_text.dart';
 import '../components/k_cool_alert.dart';
 import '../constants/colors.dart';
+import '../utilities/notification_util.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -24,6 +25,7 @@ class _HomePageState extends State<HomePage> {
   TimeOfDay selectedTime = TimeOfDay.now();
   bool isTimeSelected = false;
   final uid = const Uuid();
+  late NotificationUtil notificationUtil;
 
   final List<String> notificationDays = [
     'Mon',
@@ -36,7 +38,7 @@ class _HomePageState extends State<HomePage> {
   ];
 
   void triggerNetworkNotification() {
-    // Todo
+    notificationUtil.createNetworkNotification();
   }
 
   void triggerCancelNotification() {
@@ -116,6 +118,10 @@ class _HomePageState extends State<HomePage> {
         button2Title: 'Don\'t Allow',
       );
     });
+
+    notificationUtil = NotificationUtil(
+      awesomeNotifications: AwesomeNotifications(),
+    );
     super.initState();
   }
 
