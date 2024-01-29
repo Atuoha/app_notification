@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:app_notifications/utilities/create_uid.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
+import '../constants/app_strings.dart';
 import '../main.dart';
 import '../pages/stats_page.dart';
 
@@ -10,17 +11,61 @@ class NotificationUtil {
 
   NotificationUtil({required this.awesomeNotifications});
 
-  Future<void> createNetworkNotification() async {
+  // Create Basic Notification
+  Future<void> createBasicNotification({
+    required int id,
+    required String channelKey,
+    required String title,
+    required String body,
+    String bigPicture = AppStrings.DEFAULT_ICON,
+    NotificationLayout layout = NotificationLayout.BigPicture,
+  }) async {
     awesomeNotifications.createNotification(
       content: NotificationContent(
-        id: createUniqueId(),
-        channelKey: 'basic_channel',
-        title:
-            '${Emojis.clothing_backpack + Emojis.transport_air_airplane} Network Call',
-        body:
-            'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,molestiae quas vel sint commodi repudiandae consequuntur',
-        bigPicture: 'asset://assets/imgs/eco_large.png',
-        notificationLayout: NotificationLayout.BigPicture,
+        id: id,
+        channelKey: channelKey,
+        title: title,
+        body: body,
+        bigPicture: bigPicture,
+        notificationLayout: layout,
+      ),
+    );
+  }
+
+  // Create Schedule Notification
+  Future<void> createScheduledNotification({
+    required int id,
+    required String channelKey,
+    required String title,
+    required String body,
+    String bigPicture = AppStrings.DEFAULT_ICON,
+    NotificationLayout layout = NotificationLayout.BigPicture,
+    required NotificationCalendar notificationCalendar,
+  }) async {
+    awesomeNotifications.createNotification(
+      content: NotificationContent(
+        id: id,
+        channelKey: channelKey,
+        title: title,
+        body: body,
+        bigPicture: bigPicture,
+        notificationLayout: layout,
+      ),
+      actionButtons: [
+        NotificationActionButton(
+          key: AppStrings.SCHEDULED_NOTIFICATION_BUTTON1_KEY,
+          label: 'Mark Done',
+        ),
+        NotificationActionButton(
+          key: AppStrings.SCHEDULED_NOTIFICATION_BUTTON2_KEY,
+          label: 'Clear',
+        ),
+      ],
+      schedule: NotificationCalendar(
+        weekday: notificationCalendar.weekday,
+        hour: notificationCalendar.hour,
+        minute: notificationCalendar.minute,
+        repeats: true,
       ),
     );
   }
@@ -39,8 +84,9 @@ class NotificationUtil {
       ReceivedNotification receivedNotification, BuildContext context) async {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content:
-            Text('Notification created ${receivedNotification.channelKey}'),
+        content: Text(
+          'Notification created ${receivedNotification.channelKey}',
+        ),
       ),
     );
   }
@@ -65,7 +111,8 @@ class NotificationUtil {
       ReceivedAction receivedAction) async {
     // Your code goes here
 
-    if (receivedAction.channelKey == 'basic_channel' && Platform.isIOS) {
+    if (receivedAction.channelKey == AppStrings.BASIC_CHANNEL_KEY &&
+        Platform.isIOS) {
       AwesomeNotifications().getGlobalBadgeCounter().then((value) {
         AwesomeNotifications().setGlobalBadgeCounter(value - 1);
       });

@@ -6,7 +6,9 @@ import 'package:uuid/uuid.dart';
 import '../components/customElevatedButton.dart';
 import '../components/custom_alert_dialog.dart';
 import '../components/custom_rich_text.dart';
+import '../constants/app_strings.dart';
 import '../constants/colors.dart';
+import '../utilities/create_uid.dart';
 import '../utilities/notification_util.dart';
 
 class HomePage extends StatefulWidget {
@@ -34,15 +36,23 @@ class _HomePageState extends State<HomePage> {
     'Sun'
   ];
 
-  void triggerNetworkNotification() {
-    notificationUtil.createNetworkNotification();
+  void createBasicNotification() {
+    notificationUtil.createBasicNotification(
+      id: createUniqueId(),
+      channelKey: AppStrings.BASIC_CHANNEL_KEY,
+      title:
+          '${Emojis.clothing_backpack + Emojis.transport_air_airplane} Network Call',
+      body:
+          'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,molestiae quas vel sint commodi repudiandae consequuntur',
+      bigPicture: 'asset://assets/imgs/eco_large.png',
+    );
   }
 
   void triggerCancelNotification() {
     // Todo
   }
 
-  void triggerEcoNotification() {
+  void triggerScheduleNotification() {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -79,6 +89,23 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  // create schedule notification
+  void createScheduleNotification() {
+    notificationUtil.createScheduledNotification(
+      id: createUniqueId(),
+      channelKey: AppStrings.SCHEDULE_CHANNEL_KEY,
+      title: '${Emojis.time_alarm_clock} Check your rocket!',
+      body:
+          'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,molestiae quas vel sint commodi repudiandae consequuntur',
+      layout: NotificationLayout.Default,
+      notificationCalendar: NotificationCalendar(
+        hour: selectedTime.hour,
+        minute: selectedTime.minute,
+        weekday: selectedDayOfTheWeek,
+      ),
+    );
+  }
+
   // time picker
   Future<TimeOfDay?> pickTime() async {
     await showTimePicker(
@@ -90,6 +117,7 @@ class _HomePageState extends State<HomePage> {
           selectedTime = time!;
           isTimeSelected = true;
         });
+        createScheduleNotification();
         Navigator.of(context).pop();
       },
     );
@@ -131,6 +159,12 @@ class _HomePageState extends State<HomePage> {
     );
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    AwesomeNotifications().dispose();
+    super.dispose();
   }
 
   @override
@@ -188,12 +222,12 @@ class _HomePageState extends State<HomePage> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               CustomElevatedButton(
-                function: triggerNetworkNotification,
+                function: createBasicNotification,
                 title: 'Network',
                 icon: CupertinoIcons.news,
               ),
               CustomElevatedButton(
-                function: triggerEcoNotification,
+                function: triggerScheduleNotification,
                 title: 'Eco Tickets',
                 icon: CupertinoIcons.tickets,
               ),
