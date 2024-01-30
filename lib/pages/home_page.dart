@@ -109,22 +109,18 @@ class _HomePageState extends State<HomePage> {
 
   // time picker
   Future<TimeOfDay?> pickTime() async {
-    await showTimePicker(
+    TimeOfDay? pickedTime = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
-    ).then(
-      (time) {
-        setState(() {
-          selectedTime = time!;
-          isTimeSelected = true;
-        });
-        if (isTimeSelected) {
-          createScheduleNotification();
-        }
-        Navigator.of(context).pop();
-      },
     );
 
+    if (pickedTime != null) {
+      setState(() {
+        selectedTime = pickedTime;
+        isTimeSelected = true;
+      });
+      createScheduleNotification();
+    }
     return null;
   }
 
