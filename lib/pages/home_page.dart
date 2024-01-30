@@ -149,8 +149,8 @@ class _HomePageState extends State<HomePage> {
     AwesomeNotifications().setListeners(
       onNotificationCreatedMethod: (notification) async =>
           NotificationUtil.onNotificationCreatedMethod(notification, context),
-      onActionReceivedMethod: (ReceivedAction receivedAction) =>
-          NotificationUtil.onActionReceivedMethod(receivedAction),
+      onActionReceivedMethod:
+          NotificationUtil.onActionReceivedMethod,
       onDismissActionReceivedMethod: (ReceivedAction receivedAction) =>
           NotificationUtil.onDismissActionReceivedMethod(receivedAction),
       onNotificationDisplayedMethod: (ReceivedNotification
